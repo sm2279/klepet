@@ -1,17 +1,18 @@
 function divElementEnostavniTekst(sporocilo) {
-  var slika = sporocilo.match(/(https?:\/\/[^\s]*\.(?:jpg|png|gif))/gi, '<img src="$1" width="200" style="padding-left: 20px;"/>');
+  var slika = sporocilo.search(new RegExp(/(https?:\/\/[^\s]*\.(jpg|png|gif))/gi)) > -1;
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
   if (jeSmesko) {
-    //sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
+    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else if (slika) {
+     sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />').replace(new RegExp(/(https?:\/\/[^\s]*\.(jpg|png|gif))/gi), "<img src='$1' width='200px' style='margin-left: 20px;' />");
      return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
   }
 }
 
-function slike(vhodnoBesedilo) {
+/*function slike(vhodnoBesedilo) {
   var seznamSmeskov = ["wink.png", "smiley.png", "like.png", "kiss.png", "sad.png"];
   var image = vhodnoBesedilo.toString();
   for (var i in image) {
@@ -21,7 +22,7 @@ function slike(vhodnoBesedilo) {
   }
   vhodnoBesedilo = vhodnoBesedilo.replace(/(https?:\/\/[^\s]*\.(?:jpg|png|gif))/gi, "<img src='$1' width='200px' style='margin-left: 20px;' />" );
   return vhodnoBesedilo;
-}
+}*/
 
 function divElementHtmlTekst(sporocilo) {
   return $('<div></div>').html('<i>' + sporocilo + '</i>');
@@ -31,7 +32,6 @@ function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
   sporocilo = dodajSmeske(sporocilo);
   var sistemskoSporocilo;
-  sporocilo = slike(sporocilo);
   if (sporocilo.charAt(0) == '/') {
     sistemskoSporocilo = klepetApp.procesirajUkaz(sporocilo);
     if (sistemskoSporocilo) {
