@@ -1,17 +1,23 @@
 function divElementEnostavniTekst(sporocilo) {
   var slika = sporocilo.match(/(https?:\/\/[^\s]*\.(?:jpg|png|gif))/gi, '<img src="$1" width="200" style="padding-left: 20px;"/>');
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
+  var yt = sporocilo.search(/(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)/gi) > -1;
+  
   if (jeSmesko) {
     //sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else if (slika) {
      return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  } else if (yt) {
+    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/(https:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+))/gi), '<iframe style="width:200px; height:150px; margin-left:20px;" src="https://www.youtube.com/embed/$1" allowfullscreen></iframe>';
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
   }
 }
 
-function slike(vhodnoBesedilo) {
+
+/* function slike(vhodnoBesedilo) {
   var seznamSmeskov = ["wink.png", "smiley.png", "like.png", "kiss.png", "sad.png"];
   var image = vhodnoBesedilo.toString();
   for (var i in image) {
@@ -22,7 +28,7 @@ function slike(vhodnoBesedilo) {
   vhodnoBesedilo = vhodnoBesedilo.replace(/(https?:\/\/[^\s]*\.(?:jpg|png|gif))/gi, "<img src='$1' width='200px' style='margin-left: 20px;' />" );
   return vhodnoBesedilo;
 }
-
+*/
 function divElementHtmlTekst(sporocilo) {
   return $('<div></div>').html('<i>' + sporocilo + '</i>');
 }
