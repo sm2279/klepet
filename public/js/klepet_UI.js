@@ -1,11 +1,15 @@
 function divElementEnostavniTekst(sporocilo) {
   var slika = sporocilo.match(/(https?:\/\/[^\s]*\.(?:jpg|png|gif))/gi, '<img src="$1" width="200" style="padding-left: 20px;"/>');
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
+  var video = sporocilo.search(/https:\/\/www\.youtube.com\/watch\?v=.*/gi) > -1;
   if (jeSmesko) {
     //sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else if (slika) {
      return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  } else if (video) {
+    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/https:\/\/www.youtube.com\/watch\?v=([\w-=]+)/g, '<iframe style ="width:200px; height=150px; margin-left:20px" src="https://www.youtube.com/embed/$1" allowfullscreen> </iframe>')
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
   }
